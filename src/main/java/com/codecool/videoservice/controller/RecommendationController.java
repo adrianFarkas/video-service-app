@@ -9,7 +9,7 @@ import java.util.List;
 
 @RestController
 @CrossOrigin
-@RequestMapping("/recommendation")
+@RequestMapping("/recommendations")
 public class RecommendationController {
 
     @Autowired
@@ -20,7 +20,7 @@ public class RecommendationController {
         return recommendationRepository.findAllByVideoId(id);
     }
 
-    @PostMapping("/add")
+    @PostMapping
     public List<Recommendation> saveNewRecommendation(@RequestBody Recommendation recommendation, @RequestParam("videoId") Long id) {
         recommendation.setVideoId(id);
         recommendationRepository.save(recommendation);
