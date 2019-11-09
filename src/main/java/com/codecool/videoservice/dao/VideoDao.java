@@ -8,4 +8,5 @@ public interface VideoDao {
 
     List<Video> findAllVideos();
 
+    Video getVideoWithRecommendation(Long id);
 }

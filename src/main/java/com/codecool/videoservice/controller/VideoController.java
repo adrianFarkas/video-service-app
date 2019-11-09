@@ -1,6 +1,7 @@
 package com.codecool.videoservice.controller;
 
 import com.codecool.videoservice.dao.VideoDao;
+import com.codecool.videoservice.dao.VideoDaoJpa;
 import com.codecool.videoservice.model.Video;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -20,4 +21,8 @@ public class VideoController {
         return videoDaoJpa.findAllVideos();
     }
 
+    @GetMapping("/{id}")
+    public Video getVideosWithRecommendation(@PathVariable("id") Long id) {
+        return videoDaoJpa.getVideoWithRecommendation(id);
+    }
 }
