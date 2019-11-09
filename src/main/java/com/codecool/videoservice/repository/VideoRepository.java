@@ -9,4 +9,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public interface VideoRepository extends JpaRepository<Video, Long> {
 
+    @Modifying
+    @Query("UPDATE Video SET name = :#{#video.name}, url = :#{#video.url} WHERE id = :id")
+    void updateById(Long id, Video video);
+
 }

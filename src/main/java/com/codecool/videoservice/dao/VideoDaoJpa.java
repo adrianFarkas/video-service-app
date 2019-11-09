@@ -26,4 +26,9 @@ public class VideoDaoJpa implements VideoDao {
         if (video != null) video.setRecommendations(recommendationRepository.findAllByVideoId(id));
         return video;
     }
+
+    public Video updateById(Long id, Video video) {
+        videoRepository.updateById(id, video);
+        return videoRepository.findById(id).orElse(null);
+    }
 }
