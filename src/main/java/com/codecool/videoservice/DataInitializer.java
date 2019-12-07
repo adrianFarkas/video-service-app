@@ -38,7 +38,12 @@ public class DataInitializer implements CommandLineRunner {
                 .url("https://www.youtube.com/watch?v=HFxg7_b2WJo")
                 .build();
 
-        videoRepository.saveAll(Arrays.asList(video1, video2, video3, video4));
+        Video video5 = Video.builder()
+                .name("Demo Video")
+                .url("https://www.youtube.com/watch?v=Bey4XXJAqS8&t=4s")
+                .build();
+
+        videoRepository.saveAll(Arrays.asList(video1, video2, video3, video4, video5));
 
         log.debug("printing all videos...");
         videoRepository.findAll().forEach(v -> log.debug(" Video :" + v.toString()));
