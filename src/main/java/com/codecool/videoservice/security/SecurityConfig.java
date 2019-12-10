@@ -28,7 +28,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .and()
                 .authorizeRequests()
                 .antMatchers("/").permitAll()
-                .anyRequest().hasRole("ADMIN");
+                .anyRequest().hasRole("ADMIN")
+            .and()
+            .addFilterBefore(new JwtTokenFilter(jwtTokenServices), UsernamePasswordAuthenticationFilter.class);
     }
 
     @Bean
