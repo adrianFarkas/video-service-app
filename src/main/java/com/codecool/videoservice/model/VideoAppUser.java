@@ -21,7 +21,10 @@ public class VideoAppUser {
     private String id;
 
     @NotNull
-    private String userName;
+    private String firstName;
+
+    @NotNull
+    private String lastName;
 
     @NotNull
     private String password;

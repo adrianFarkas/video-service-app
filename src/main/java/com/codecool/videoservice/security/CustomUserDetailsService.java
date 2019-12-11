@@ -1,15 +1,12 @@
 package com.codecool.videoservice.security;
 
+import com.codecool.videoservice.model.CustomUserDetails;
 import com.codecool.videoservice.model.VideoAppUser;
 import com.codecool.videoservice.repository.UserRepository;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
-
-import java.util.stream.Collectors;
 
 @Component
 public class CustomUserDetailsService implements UserDetailsService {
@@ -24,12 +21,11 @@ public class CustomUserDetailsService implements UserDetailsService {
      * Loads the user from the DB and converts it to Spring Security's internal User object
      */
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        VideoAppUser user = users.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("Username: " + username + " not found"));
+    public UserDetails loadUserByUsername(String userEmail) throws UsernameNotFoundException {
+        VideoAppUser user = users.findByEmail(userEmail)
+                .orElseThrow(() -> new UsernameNotFoundException("User email: " + userEmail + " not found"));
 
-        return new User(user.getUserName(), user.getPassword(),
-                user.getRoles().stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList()));
+        return CustomUserDetails.create(user);
     }
 }
 

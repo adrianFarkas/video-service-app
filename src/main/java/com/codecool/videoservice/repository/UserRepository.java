@@ -7,5 +7,7 @@ import java.util.Optional;
 
 public interface UserRepository extends JpaRepository<VideoAppUser,String> {
 
-    Optional<VideoAppUser> findByUsername(String username);
+    Optional<VideoAppUser> findByUserName(String username);
+
+    Optional<VideoAppUser> findByEmail(String email);
 }
