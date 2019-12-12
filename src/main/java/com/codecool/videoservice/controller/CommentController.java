@@ -11,7 +11,7 @@ import java.util.List;
 
 @RestController
 @CrossOrigin
-@RequestMapping("/recommendations")
+@RequestMapping("/comments")
 public class CommentController {
 
     @Autowired
@@ -23,13 +23,13 @@ public class CommentController {
     @Autowired
     private EntityManager entityManager;
 
-    @GetMapping("/{videoId}")
-    public List<Comment> getRecommendationsByVideoId(@PathVariable("videoId") Long id) {
+    @GetMapping
+    public List<Comment> getCommentsByVideoId(@RequestParam("videoId") Long id) {
         return commentRepository.findAllByVideoId(id);
     }
 
     @PostMapping
-    public List<Comment> saveNewRecommendation(@RequestBody Comment comment, @RequestParam("videoId") Long id) {
+    public List<Comment> addNewComment(@RequestBody Comment comment, @RequestParam("videoId") Long id) {
         comment.setVideo(videoRepository.findById(id).orElse(null));
         commentRepository.save(comment);
         entityManager.clear();
@@ -37,14 +37,8 @@ public class CommentController {
     }
 
     @PutMapping("/{id}")
-    public Comment updateRecommendationById(@RequestBody Comment comment, @PathVariable("id") Long id) {
+    public Comment updateComment(@RequestBody Comment comment, @PathVariable("id") Long id) {
         commentRepository.updateById(comment, id);
         return commentRepository.findById(id).orElse(null);
-    }
-
-    @PutMapping("/update")
-    public Comment updateRecommendation(@RequestBody Comment comment) {
-        commentRepository.save(comment);
-        return commentRepository.findById(comment.getId()).orElse(null);
     }
 }
