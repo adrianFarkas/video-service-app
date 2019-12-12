@@ -18,8 +18,8 @@ public class VideoDaoJpa implements VideoDao {
         return videoRepository.getAllVideo();
     }
 
-    public Video findVideoById(Long id) {
-        return videoRepository.findById(id).orElse(null);
+    public VideoDetails findVideoById(Long id) {
+        return videoRepository.getVideoById(id);
     }
 
     public Video updateById(Long id, Video video) {

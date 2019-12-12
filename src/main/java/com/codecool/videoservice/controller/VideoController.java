@@ -22,7 +22,7 @@ public class VideoController {
     }
 
     @GetMapping("/{id}")
-    public Video getVideoById(@PathVariable("id") Long id) {
+    public VideoDetails getVideoById(@PathVariable("id") Long id) {
         return videoDaoJpa.findVideoById(id);
     }
 

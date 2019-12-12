@@ -9,7 +9,7 @@ public interface VideoDao {
 
     List<VideoDetails> findAllVideos();
 
-    Video findVideoById(Long id);
+    VideoDetails findVideoById(Long id);
 
     Video updateById(Long id, Video video);
 }

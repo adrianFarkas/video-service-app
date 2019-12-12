@@ -20,4 +20,8 @@ public interface VideoRepository extends JpaRepository<Video, Long> {
             "FROM Video v")
     List<VideoDetails> getAllVideo();
 
+    @Query("SELECT NEW com.codecool.videoservice.model.VideoDetails(v.id, v.name, v.url, v.creationDate)" +
+            "FROM Video v WHERE v.id = :id")
+    VideoDetails getVideoById(Long id);
+
 }
