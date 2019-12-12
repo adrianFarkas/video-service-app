@@ -29,7 +29,6 @@ public class Video {
 
     @OneToMany(mappedBy = "video")
     @ToString.Exclude
-    @JsonIgnore
     private List<Comment> comments;
 
 }

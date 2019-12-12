@@ -7,9 +7,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
-@Setter
-@ToString
-@EqualsAndHashCode
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
@@ -17,15 +15,12 @@ import java.time.LocalDateTime;
 public class Comment {
 
     @Id
-    @Getter
     @GeneratedValue
     private Long id;
 
-    @Getter
     @Column(columnDefinition = "text")
     private String comment;
 
-    @Getter
     @Column(updatable = false)
     @CreationTimestamp
     private LocalDateTime creationDate;
@@ -34,8 +29,4 @@ public class Comment {
     @ManyToOne
     @JsonIgnore
     private Video video;
-
-    @Getter
-    @Column(name = "video_id", insertable = false, updatable = false)
-    private Long videoId;
 }
