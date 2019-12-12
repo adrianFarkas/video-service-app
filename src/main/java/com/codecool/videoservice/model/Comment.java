@@ -6,30 +6,36 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.List;
 
-@Data
+@Setter
+@ToString
+@EqualsAndHashCode
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @Entity
-public class Video {
+public class Comment {
 
     @Id
+    @Getter
     @GeneratedValue
     private Long id;
 
-    private String name;
+    @Getter
+    @Column(columnDefinition = "text")
+    private String comment;
 
-    private String url;
-
+    @Getter
     @Column(updatable = false)
     @CreationTimestamp
     private LocalDateTime creationDate;
 
-    @OneToMany(mappedBy = "video")
-    @ToString.Exclude
+    @JoinColumn(name = "video_id")
+    @ManyToOne
     @JsonIgnore
-    private List<Comment> comments;
+    private Video video;
 
+    @Getter
+    @Column(name = "video_id", insertable = false, updatable = false)
+    private Long videoId;
 }

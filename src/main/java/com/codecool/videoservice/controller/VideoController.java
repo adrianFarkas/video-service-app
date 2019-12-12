@@ -20,11 +20,6 @@ public class VideoController {
         return videoDaoJpa.findAllVideos();
     }
 
-    @GetMapping("/{id}")
-    public Video getVideosWithRecommendation(@PathVariable("id") Long id) {
-        return videoDaoJpa.getVideoWithRecommendation(id);
-    }
-
     @PutMapping("/{id}")
     public Video updateVideo(@PathVariable("id") Long id, @RequestBody Video video) {
         return videoDaoJpa.updateById(id, video);
