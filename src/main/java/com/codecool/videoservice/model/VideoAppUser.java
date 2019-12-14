@@ -30,6 +30,7 @@ public class VideoAppUser {
     private String password;
 
     @NotNull
+    @Column(unique = true)
     private String email;
 
     @ElementCollection(fetch = FetchType.EAGER)
