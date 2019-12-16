@@ -42,22 +42,26 @@ public class AuthService {
         return userRepository.findByEmail(email).isPresent();
     }
 
-    public Map<Object, Object> createModel(VideoAppUser user) {
-        Map<Object, Object> model = new HashMap<>();
-        String token = createToken(user);
-        model.put("user", user.getEmail());
-        model.put("token", token);
-        model.put("roles", user.getRoles());
-        return model;
+    public Map<Object, Object> authenticate(VideoAppUser user) {
+
+        String username = user.getEmail();
+
+        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, user.getPassword()));
+        List<String> roles = authentication.getAuthorities()
+                .stream()
+                .map(GrantedAuthority::getAuthority)
+                .collect(Collectors.toList());
+
+        String token = jwtTokenServices.createToken(username, roles);
+
+        return createModel(username, token, roles);
     }
 
-    private String createToken(VideoAppUser user){
-        String username = user.getEmail();
-            Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, user.getPassword()));
-            List<String> roles = authentication.getAuthorities()
-                    .stream()
-                    .map(GrantedAuthority::getAuthority)
-                    .collect(Collectors.toList());
-        return jwtTokenServices.createToken(username, roles);
+    private Map<Object, Object> createModel(String user, String token, List<String> roles){
+        Map<Object, Object> model = new HashMap<>();
+        model.put("user", user);
+        model.put("token", token);
+        model.put("roles", roles);
+        return model;
     }
 }

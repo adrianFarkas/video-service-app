@@ -26,7 +26,7 @@ public class AuthController {
 
     @PostMapping("sign-in")
     public ResponseEntity signIn(@RequestBody VideoAppUser user) {
-        Map<Object, Object> model = authService.createModel(user);
+        Map<Object, Object> model = authService.authenticate(user);
         return ResponseEntity.ok(model);
     }
 }
