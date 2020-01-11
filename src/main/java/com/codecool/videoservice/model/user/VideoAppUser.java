@@ -29,6 +29,8 @@ public class VideoAppUser {
     @NotNull
     private String password;
 
+    private String profileImg;
+
     @NotNull
     @Column(unique = true)
     private String email;

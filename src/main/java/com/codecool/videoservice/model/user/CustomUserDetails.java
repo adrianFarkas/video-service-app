@@ -16,14 +16,16 @@ public class CustomUserDetails implements UserDetails {
     private String lastName;
     private String email;
     private String password;
+    private String profileImg;
     private Collection<? extends GrantedAuthority> authorities;
 
-    public CustomUserDetails(String id, String firstName, String lastName, String email, String password, Collection<? extends GrantedAuthority> authorities) {
+    public CustomUserDetails(String id, String firstName, String lastName, String email, String password, String profileImg, Collection<? extends GrantedAuthority> authorities) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.password = password;
+        this.profileImg = profileImg;
         this.authorities = authorities;
     }
 
@@ -41,6 +43,7 @@ public class CustomUserDetails implements UserDetails {
                 user.getLastName(),
                 user.getEmail(),
                 user.getPassword(),
+                user.getProfileImg(),
                 authorities
         );
     }
