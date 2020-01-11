@@ -1,13 +1,13 @@
 package com.codecool.videoservice.controller;
 
-import com.codecool.videoservice.model.VideoAppUser;
+import com.codecool.videoservice.model.user.VideoAppUser;
 import com.codecool.videoservice.service.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Map;
+import javax.servlet.http.HttpServletResponse;
 
 @RestController
 @RequestMapping("/auth")
@@ -24,9 +24,15 @@ public class AuthController {
         return ResponseEntity.ok("User saved successfully!");
     }
 
-    @PostMapping("sign-in")
-    public ResponseEntity signIn(@RequestBody VideoAppUser user) {
-        Map<Object, Object> model = authService.authenticate(user);
-        return ResponseEntity.ok(model);
+    @PostMapping("/sign-in")
+    public ResponseEntity signIn(@RequestBody VideoAppUser user, HttpServletResponse response) {
+        authService.authenticate(user, response);
+        return new ResponseEntity(HttpStatus.OK);
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity signIn(HttpServletResponse response) {
+        authService.logout(response);
+        return new ResponseEntity(HttpStatus.OK);
     }
 }
