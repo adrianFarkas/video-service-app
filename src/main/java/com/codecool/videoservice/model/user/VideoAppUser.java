@@ -1,4 +1,4 @@
-package com.codecool.videoservice.model;
+package com.codecool.videoservice.model.user;
 
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;

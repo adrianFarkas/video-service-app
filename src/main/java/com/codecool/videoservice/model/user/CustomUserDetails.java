@@ -1,4 +1,4 @@
-package com.codecool.videoservice.model;
+package com.codecool.videoservice.model.user;
 
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;

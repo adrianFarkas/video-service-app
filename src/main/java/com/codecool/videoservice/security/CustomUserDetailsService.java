@@ -1,7 +1,7 @@
 package com.codecool.videoservice.security;
 
-import com.codecool.videoservice.model.CustomUserDetails;
-import com.codecool.videoservice.model.VideoAppUser;
+import com.codecool.videoservice.model.user.CustomUserDetails;
+import com.codecool.videoservice.model.user.VideoAppUser;
 import com.codecool.videoservice.repository.UserRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
