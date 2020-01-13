@@ -1,5 +1,6 @@
 package com.codecool.videoservice.model;
 
+import com.codecool.videoservice.model.user.VideoAppUser;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -19,9 +20,14 @@ public class Video {
     @GeneratedValue
     private Long id;
 
-    private String name;
+    private String title;
 
-    private String url;
+    @Column(columnDefinition = "text")
+    private String description;
+
+    private String videoLink;
+
+    private String thumbNailLink;
 
     @Column(updatable = false)
     @CreationTimestamp

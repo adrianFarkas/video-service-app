@@ -13,14 +13,16 @@ import java.util.List;
 public interface VideoRepository extends JpaRepository<Video, Long> {
 
     @Modifying
-    @Query("UPDATE Video SET name = :#{#video.name}, url = :#{#video.url} WHERE id = :id")
+    @Query("UPDATE Video SET title = :#{#video.title}, description = :#{#video.description} WHERE id = :id")
     void updateById(Long id, Video video);
 
-    @Query("SELECT NEW com.codecool.videoservice.model.VideoDetails(v.id, v.name, v.url, v.creationDate)" +
+    @Query("SELECT NEW com.codecool.videoservice.model.VideoDetails(" +
+            "v.id, v.title, v.description, v.videoLink, v.thumbNailLink, v.creationDate, v.videoAppUser.id)" +
             "FROM Video v")
     List<VideoDetails> getAllVideo();
 
-    @Query("SELECT NEW com.codecool.videoservice.model.VideoDetails(v.id, v.name, v.url, v.creationDate)" +
+    @Query("SELECT NEW com.codecool.videoservice.model.VideoDetails(" +
+            "v.id, v.title, v.description, v.videoLink, v.thumbNailLink, v.creationDate, v.videoAppUser.id)" +
             "FROM Video v WHERE v.id = :id")
     VideoDetails getVideoById(Long id);
 

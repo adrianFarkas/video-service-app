@@ -12,7 +12,10 @@ import java.time.LocalDateTime;
 public class VideoDetails {
 
     private Long id;
-    private String name;
-    private String url;
+    private String title;
+    private String description;
+    private String videoLink;
+    private String thumbnailLink;
     private LocalDateTime creationDate;
+    private String userId;
 }
