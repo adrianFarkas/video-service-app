@@ -1,13 +1,16 @@
 package com.codecool.videoservice;
 
 import com.codecool.videoservice.model.Video;
+import com.codecool.videoservice.model.user.VideoAppUser;
 import com.codecool.videoservice.repository.VideoRepository;
+import com.codecool.videoservice.service.AuthService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
-import java.util.Arrays;
+import java.util.*;
 
 @Component
 @Slf4j
@@ -16,34 +19,64 @@ public class DataInitializer implements CommandLineRunner {
     @Autowired
     private VideoRepository videoRepository;
 
+    @Autowired
+    private AuthService authService;
+
+    @Value("${cloudfront.link}")
+    private String cloudFront;
+
     @Override
     public void run(String... args) {
+
+        String customId = "feda081c-9cd2-44ea-90eb-1a0c8131b34d";
+        String basicLink = String.format("%s/%s", cloudFront, customId);
+
+        VideoAppUser appUser = VideoAppUser.builder()
+                .id(customId)
+                .email("adrian@example.com")
+                .firstName("Farkas")
+                .lastName("Adrián")
+                .password("Qwerty1")
+                .profileImg(String.format("%s/%s", basicLink, "my-img.jpg"))
+                .build();
+
         Video video1 = Video.builder()
-                .name("Codecool-Microservices with Spring Cloud #1")
-                .url("https://www.youtube.com/watch?v=tsC4bIP0Jl4")
+                .title("Sample Video 1")
+                .description("Est bi-color saga, cesaris. Coordinataes observare!")
+                .videoLink(String.format("%s/%s", basicLink, "sample-video-1.mp4"))
+                .thumbNailLink(String.format("%s/%s", basicLink, "sample-video-1-thumb.jpg"))
+                .videoAppUser(appUser)
                 .build();
 
         Video video2 = Video.builder()
-                .name("React Context & Hooks Tutorial #1 - Introduction")
-                .url("https://www.youtube.com/watch?v=6RhOzQciVwI&list=PL4cUxeGkcC9hNokByJilPg5g9m2APUePI")
+                .title("Sample Video 2")
+                .description("Noster adiurator mechanice imperiums cedrium est.\n" +
+                        "Solitudo bi-color lanista est.")
+                .videoLink(String.format("%s/%s", basicLink, "sample-video-2.mp4"))
+                .thumbNailLink(String.format("%s/%s", basicLink, "sample-video-2-thumb.jpg"))
+                .videoAppUser(appUser)
                 .build();
 
         Video video3 = Video.builder()
-                .name("Programming / Coding / Hacking music")
-                .url("https://www.youtube.com/watch?v=l9nh1l8ZIJQ&t=2319s")
+                .title("Sample Video 3")
+                .description("Noster adiurator mechanice imperiums cedrium est.\n" +
+                        "Solitudo bi-color lanista est.\n\n" +
+                        "Brodiums trabem, tanquam varius adelphis.")
+                .videoLink(String.format("%s/%s", basicLink, "sample-video-3.mp4"))
+                .thumbNailLink(String.format("%s/%s", basicLink, "sample-video-3-thumb.jpg"))
+                .videoAppUser(appUser)
                 .build();
 
         Video video4 = Video.builder()
-                .name("Töltött sajtos párizsi")
-                .url("https://www.youtube.com/watch?v=HFxg7_b2WJo")
+                .title("Sample Video 4")
+                .description("Heu, clemens xiphias! Vae, festus orexis!")
+                .videoLink(String.format("%s/%s", basicLink, "sample-video-4.mp4"))
+                .thumbNailLink(String.format("%s/%s", basicLink, "sample-video-4-thumb.jpg"))
+                .videoAppUser(appUser)
                 .build();
 
-        Video video5 = Video.builder()
-                .name("Demo Video")
-                .url("https://www.youtube.com/watch?v=Bey4XXJAqS8&t=4s")
-                .build();
-
-        videoRepository.saveAll(Arrays.asList(video1, video2, video3, video4, video5));
+        authService.saveUser(appUser);
+        videoRepository.saveAll(Arrays.asList(video1, video2, video3, video4));
 
         log.debug("printing all videos...");
         videoRepository.findAll().forEach(v -> log.debug(" Video :" + v.toString()));
