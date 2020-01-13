@@ -7,10 +7,9 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.Objects;
+
+import static com.codecool.videoservice.util.FileType.MP4;
 
 @RestController
 @CrossOrigin
@@ -24,25 +23,18 @@ public class FileUploadController {
     private FileStore fileStore;
 
     @PostMapping(value = "/upload/video",  consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public String fileUpload(@RequestPart("file") MultipartFile file) throws IOException {
+    public String fileUpload(@RequestPart MultipartFile video, @RequestPart MultipartFile thumbnail,
+            @RequestPart String title, @RequestPart String description) {
 
-        if (file.isEmpty()) {
+        if (video.isEmpty()) {
             throw new IllegalStateException("Cannot upload empty file");
         }
 
-        Map<String, String> metadata = new HashMap<>();
-        metadata.put("Content-Type", file.getContentType());
-        metadata.put("Content-Length", String.valueOf(file.getSize()));
+        if (!Objects.equals(video.getContentType(), MP4.getType())) {
+            throw new IllegalStateException("Invalid type of file");
+        }
 
-        fileStore.save(
-                s3bucket,
-                file.getOriginalFilename(),
-                Optional.of(metadata),
-                file.getInputStream()
-                );
-
-
-
-        return file.getOriginalFilename();
+        fileStore.save(s3bucket, video, thumbnail, title, description);
+        return video.getOriginalFilename();
     }
 }

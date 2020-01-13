@@ -3,15 +3,16 @@ package com.codecool.videoservice.filestore;
 import com.amazonaws.AmazonServiceException;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.ObjectMetadata;
-import com.amazonaws.services.s3.model.S3Object;
-import com.amazonaws.util.IOUtils;
+import com.codecool.videoservice.model.Video;
+import com.codecool.videoservice.model.user.VideoAppUser;
+import com.codecool.videoservice.repository.VideoRepository;
+import com.codecool.videoservice.service.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.util.Map;
-import java.util.Optional;
 
 @Service
 public class FileStore {
@@ -19,32 +20,61 @@ public class FileStore {
     @Autowired
     private  AmazonS3 s3;
 
-    public void save(String path,
-                     String fileName,
-                     Optional<Map<String, String>> optionalMetadata,
-                     InputStream inputStream) {
+    @Autowired
+    private VideoRepository videoRepository;
 
-        ObjectMetadata metadata = new ObjectMetadata();
-        optionalMetadata.ifPresent(map -> {
-            if (!map.isEmpty()) {
-                map.forEach(metadata::addUserMetadata);
-            }
-        });
+    @Autowired
+    private AuthService authService;
+
+    @Value("${cloudfront.link}")
+    private String cloudFront;
+
+    public void save(String bucket, MultipartFile video,
+                     MultipartFile thumbnail, String title, String description) {
+
+        VideoAppUser appUser = authService.getAuthenticatedUser();
 
         try {
-            s3.putObject(path, fileName, inputStream, metadata);
-        } catch (AmazonServiceException e) {
+            s3.putObject(bucket, createS3FilePath(appUser, video),
+                    video.getInputStream(), getFileMetadata(video));
+
+            s3.putObject(bucket, createS3FilePath(appUser, thumbnail),
+                    thumbnail.getInputStream(), getFileMetadata(thumbnail));
+
+            storeInDatabase(appUser, title, description, video, thumbnail);
+
+        } catch (AmazonServiceException | IOException e) {
             throw new IllegalArgumentException("Failed to store file to s3", e);
         }
     }
 
-    public byte[] download(String bucketName, String filename) {
-        try {
-            S3Object object = s3.getObject(bucketName, filename);
-            return IOUtils.toByteArray(object.getObjectContent());
-        } catch (AmazonServiceException | IOException e) {
-            throw new IllegalStateException("Failed to download file", e);
-        }
+    private void storeInDatabase(VideoAppUser user, String title, String description,
+                                 MultipartFile video, MultipartFile thumbnail) {
+
+        Video newVideo = Video.builder()
+                .videoAppUser(user)
+                .title(title)
+                .description(description)
+                .videoLink(createUserFilePath(user, video))
+                .thumbNailLink(createUserFilePath(user, thumbnail))
+                .build();
+
+        videoRepository.save(newVideo);
+    }
+
+    private ObjectMetadata getFileMetadata(MultipartFile file) {
+        ObjectMetadata metadata = new ObjectMetadata();
+        metadata.setContentType(file.getContentType());
+        metadata.setContentLength(file.getSize());
+        return metadata;
+    }
+
+    private String createS3FilePath(VideoAppUser user, MultipartFile file) {
+        return String.format("%s/%s", user.getId(), file.getOriginalFilename());
+    }
+
+    private String createUserFilePath(VideoAppUser appUser, MultipartFile file) {
+        return String.format("%s/%s/%s", cloudFront, appUser.getId(), file.getOriginalFilename());
     }
 
 }
