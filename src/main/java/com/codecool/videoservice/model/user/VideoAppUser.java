@@ -17,7 +17,7 @@ public class VideoAppUser {
 
     @Id
     @GeneratedValue(generator = "UUID")
-    @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
+    @GenericGenerator(name = "UUID", strategy = "com.codecool.videoservice.util.IdGenerator")
     private String id;
 
     @NotNull
