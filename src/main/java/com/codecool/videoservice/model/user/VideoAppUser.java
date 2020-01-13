@@ -1,5 +1,7 @@
 package com.codecool.videoservice.model.user;
 
+import com.codecool.videoservice.model.Video;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 
@@ -7,6 +9,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Data
 @NoArgsConstructor
@@ -34,6 +37,10 @@ public class VideoAppUser {
     @NotNull
     @Column(unique = true)
     private String email;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "videoAppUser", cascade = CascadeType.PERSIST)
+    private Set<Video> videos;
 
     @ElementCollection(fetch = FetchType.EAGER)
     @Builder.Default

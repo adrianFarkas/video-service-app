@@ -37,4 +37,8 @@ public class Video {
     @ToString.Exclude
     private List<Comment> comments;
 
+    @ManyToOne
+    @JsonIgnore
+    @ToString.Exclude
+    private VideoAppUser videoAppUser;
 }
