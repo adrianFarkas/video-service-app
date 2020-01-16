@@ -12,7 +12,12 @@ public interface UserRepository extends JpaRepository<VideoAppUser,String> {
     Optional<VideoAppUser> findByEmail(String email);
 
     @Query("SELECT NEW com.codecool.videoservice.model.user.BasicUserInformation(" +
-            "v.id, v.firstName, v.lastName, v.email, v.profileImg)" +
+            "v.id, v.firstName, v.lastName, v.profileImg)" +
             "FROM VideoAppUser v WHERE v.email = :email")
     BasicUserInformation getBasicInformationByEmail(String email);
+
+    @Query("SELECT NEW com.codecool.videoservice.model.user.BasicUserInformation(" +
+            "v.id, v.firstName, v.lastName, v.profileImg)" +
+            "FROM VideoAppUser v WHERE v.id = :id")
+    BasicUserInformation getBasicInformationById(String id);
 }
