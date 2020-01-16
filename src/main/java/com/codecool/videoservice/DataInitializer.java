@@ -43,8 +43,8 @@ public class DataInitializer implements CommandLineRunner {
         Video video1 = Video.builder()
                 .title("Sample Video 1")
                 .description("Est bi-color saga, cesaris. Coordinataes observare!")
-                .videoLink(String.format("%s/%s", basicLink, "sample-video-1.mp4"))
-                .thumbNailLink(String.format("%s/%s", basicLink, "sample-video-1-thumb.jpg"))
+                .videoLink(String.format("%s/%s", basicLink, "sample_video_1_2020_01_16_15_47.mp4"))
+                .thumbNailLink(String.format("%s/%s", basicLink, "sample_video_1_2020_01_16_15_47.jpg"))
                 .videoAppUser(appUser)
                 .build();
 
@@ -52,8 +52,8 @@ public class DataInitializer implements CommandLineRunner {
                 .title("Sample Video 2")
                 .description("Noster adiurator mechanice imperiums cedrium est.\n" +
                         "Solitudo bi-color lanista est.")
-                .videoLink(String.format("%s/%s", basicLink, "sample-video-2.mp4"))
-                .thumbNailLink(String.format("%s/%s", basicLink, "sample-video-2-thumb.jpg"))
+                .videoLink(String.format("%s/%s", basicLink, "sample_video_2_2020_01_16_15_51.mp4"))
+                .thumbNailLink(String.format("%s/%s", basicLink, "sample_video_2_2020_01_16_15_51.jpg"))
                 .videoAppUser(appUser)
                 .build();
 
@@ -62,16 +62,16 @@ public class DataInitializer implements CommandLineRunner {
                 .description("Noster adiurator mechanice imperiums cedrium est.\n" +
                         "Solitudo bi-color lanista est.\n\n" +
                         "Brodiums trabem, tanquam varius adelphis.")
-                .videoLink(String.format("%s/%s", basicLink, "sample-video-3.mp4"))
-                .thumbNailLink(String.format("%s/%s", basicLink, "sample-video-3-thumb.jpg"))
+                .videoLink(String.format("%s/%s", basicLink, "sample_video_3_2020_01_16_15_53.mp4"))
+                .thumbNailLink(String.format("%s/%s", basicLink, "sample_video_3_2020_01_16_15_53.jpg"))
                 .videoAppUser(appUser)
                 .build();
 
         Video video4 = Video.builder()
                 .title("Sample Video 4")
                 .description("Heu, clemens xiphias! Vae, festus orexis!")
-                .videoLink(String.format("%s/%s", basicLink, "sample-video-4.mp4"))
-                .thumbNailLink(String.format("%s/%s", basicLink, "sample-video-4-thumb.jpg"))
+                .videoLink(String.format("%s/%s", basicLink, "sample_video_4_2020_01_16_15_54.mp4"))
+                .thumbNailLink(String.format("%s/%s", basicLink, "sample_video_4_2020_01_16_15_54.jpg"))
                 .videoAppUser(appUser)
                 .build();
 
