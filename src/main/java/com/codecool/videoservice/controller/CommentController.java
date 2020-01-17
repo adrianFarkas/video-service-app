@@ -1,8 +1,10 @@
 package com.codecool.videoservice.controller;
 
 import com.codecool.videoservice.model.Comment;
+import com.codecool.videoservice.model.user.VideoAppUser;
 import com.codecool.videoservice.repository.CommentRepository;
 import com.codecool.videoservice.repository.VideoRepository;
+import com.codecool.videoservice.service.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,6 +23,9 @@ public class CommentController {
     private VideoRepository videoRepository;
 
     @Autowired
+    private AuthService authService;
+
+    @Autowired
     private EntityManager entityManager;
 
     @GetMapping
@@ -30,7 +35,9 @@ public class CommentController {
 
     @PostMapping
     public List<Comment> addNewComment(@RequestBody Comment comment, @RequestParam("videoId") Long id) {
+        VideoAppUser appUser = authService.getAuthenticatedUser();
         comment.setVideo(videoRepository.findById(id).orElse(null));
+        comment.setVideoAppUser(appUser);
         commentRepository.save(comment);
         entityManager.clear();
         return commentRepository.findAllByVideoId(id);

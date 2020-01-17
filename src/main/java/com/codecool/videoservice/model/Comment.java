@@ -1,5 +1,6 @@
 package com.codecool.videoservice.model;
 
+import com.codecool.videoservice.model.user.VideoAppUser;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -25,8 +26,15 @@ public class Comment {
     @CreationTimestamp
     private LocalDateTime creationDate;
 
-    @JoinColumn(name = "video_id")
     @ManyToOne
     @JsonIgnore
     private Video video;
+
+    @ManyToOne
+    @JsonIgnore
+    @ToString.Exclude
+    private VideoAppUser videoAppUser;
+
+    @Column(name = "video_app_user_id", insertable = false, updatable = false)
+    private String userId;
 }

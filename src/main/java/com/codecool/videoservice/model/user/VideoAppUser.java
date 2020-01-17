@@ -1,5 +1,6 @@
 package com.codecool.videoservice.model.user;
 
+import com.codecool.videoservice.model.Comment;
 import com.codecool.videoservice.model.Video;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
@@ -41,6 +42,10 @@ public class VideoAppUser {
     @JsonIgnore
     @OneToMany(mappedBy = "videoAppUser", cascade = CascadeType.PERSIST)
     private Set<Video> videos;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "videoAppUser", cascade = CascadeType.PERSIST)
+    private Set<Comment> comments;
 
     @ElementCollection(fetch = FetchType.EAGER)
     @Builder.Default
