@@ -3,9 +3,8 @@ package com.codecool.videoservice.filestore;
 import com.amazonaws.AmazonServiceException;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.ObjectMetadata;
-import com.codecool.videoservice.model.Video;
+import com.codecool.videoservice.dao.VideoDao;
 import com.codecool.videoservice.model.user.VideoAppUser;
-import com.codecool.videoservice.repository.VideoRepository;
 import com.codecool.videoservice.service.AuthService;
 import static com.codecool.videoservice.util.FileType.JPG;
 import static com.codecool.videoservice.util.FileType.MP4;
@@ -26,7 +25,7 @@ public class FileStore {
     private  AmazonS3 s3;
 
     @Autowired
-    private VideoRepository videoRepository;
+    private VideoDao videoDaoJpa;
 
     @Autowired
     private AuthService authService;
@@ -56,25 +55,17 @@ public class FileStore {
                     getFileMetadata(thumbnail)
             );
 
-            storeInDatabase(appUser, title, description, videoName, thumbName);
+            videoDaoJpa.addNewVideo(
+                    appUser,
+                    title,
+                    description,
+                    createUserFilePath(appUser, videoName),
+                    createUserFilePath(appUser, thumbName)
+            );
 
         } catch (AmazonServiceException | IOException e) {
             throw new IllegalArgumentException("Failed to store file to s3", e);
         }
-    }
-
-    private void storeInDatabase(VideoAppUser user, String title, String description,
-                                 String videoName, String thumbnailName) {
-
-        Video newVideo = Video.builder()
-                .videoAppUser(user)
-                .title(title)
-                .description(description)
-                .videoLink(createUserFilePath(user, videoName))
-                .thumbNailLink(createUserFilePath(user, thumbnailName))
-                .build();
-
-        videoRepository.save(newVideo);
     }
 
     private ObjectMetadata getFileMetadata(MultipartFile file) {

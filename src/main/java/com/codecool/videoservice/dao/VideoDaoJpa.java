@@ -2,6 +2,7 @@ package com.codecool.videoservice.dao;
 
 import com.codecool.videoservice.model.Video;
 import com.codecool.videoservice.model.VideoDetails;
+import com.codecool.videoservice.model.user.VideoAppUser;
 import com.codecool.videoservice.repository.VideoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,5 +26,19 @@ public class VideoDaoJpa implements VideoDao {
     public Video updateById(Long id, Video video) {
         videoRepository.updateById(id, video);
         return videoRepository.findById(id).orElse(null);
+    }
+
+    public void addNewVideo(VideoAppUser user, String title, String description,
+                            String videoLink, String thumbnailLink) {
+
+        Video newVideo = Video.builder()
+                .videoAppUser(user)
+                .title(title)
+                .description(description)
+                .videoLink(videoLink)
+                .thumbNailLink(thumbnailLink)
+                .build();
+
+        videoRepository.save(newVideo);
     }
 }
