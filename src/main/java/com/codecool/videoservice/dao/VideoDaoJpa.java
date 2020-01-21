@@ -28,8 +28,8 @@ public class VideoDaoJpa implements VideoDao {
         return videoRepository.findById(id).orElse(null);
     }
 
-    public void addNewVideo(VideoAppUser user, String title, String description,
-                            String videoLink, String thumbnailLink) {
+    public Video addNewVideo(VideoAppUser user, String title, String description,
+                             String videoLink, String thumbnailLink) {
 
         Video newVideo = Video.builder()
                 .videoAppUser(user)
@@ -40,5 +40,7 @@ public class VideoDaoJpa implements VideoDao {
                 .build();
 
         videoRepository.save(newVideo);
+        videoRepository.flush();
+        return newVideo;
     }
 }

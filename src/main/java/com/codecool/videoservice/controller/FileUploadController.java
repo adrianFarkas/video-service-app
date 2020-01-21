@@ -1,6 +1,7 @@
 package com.codecool.videoservice.controller;
 
 import com.codecool.videoservice.filestore.FileStore;
+import com.codecool.videoservice.model.Video;
 import com.codecool.videoservice.service.ThumbnailGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -28,8 +29,8 @@ public class FileUploadController {
     private ThumbnailGenerator thumbnailGenerator;
 
     @PostMapping(value = "/upload/video",  consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public String fileUpload(@RequestPart MultipartFile video, @RequestPart MultipartFile thumbnail,
-            @RequestPart String title, @RequestPart String description) {
+    public Long fileUpload(@RequestPart MultipartFile video, @RequestPart MultipartFile thumbnail,
+                           @RequestPart String title, @RequestPart String description) {
 
         if (video.isEmpty()) {
             throw new IllegalStateException("Cannot upload empty file");
@@ -39,8 +40,8 @@ public class FileUploadController {
             throw new IllegalStateException("Invalid type of file");
         }
 
-        fileStore.save(s3bucket, video, thumbnail, title, description);
-        return video.getOriginalFilename();
+        Video savedVideo = fileStore.save(s3bucket, video, thumbnail, title, description);
+        return savedVideo.getId();
     }
 
     @PostMapping("/create/thumbnails")

@@ -4,6 +4,7 @@ import com.amazonaws.AmazonServiceException;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.codecool.videoservice.dao.VideoDao;
+import com.codecool.videoservice.model.Video;
 import com.codecool.videoservice.model.user.VideoAppUser;
 import com.codecool.videoservice.service.AuthService;
 import static com.codecool.videoservice.util.FileType.JPG;
@@ -33,8 +34,8 @@ public class FileStore {
     @Value("${cloudfront.link}")
     private String cloudFront;
 
-    public void save(String bucket, MultipartFile video,
-                     MultipartFile thumbnail, String title, String description) {
+    public Video save(String bucket, MultipartFile video,
+                      MultipartFile thumbnail, String title, String description) {
 
         VideoAppUser appUser = authService.getAuthenticatedUser();
         String videoName = generateFileName(title, MP4.getFormat());
@@ -55,7 +56,7 @@ public class FileStore {
                     getFileMetadata(thumbnail)
             );
 
-            videoDaoJpa.addNewVideo(
+            return videoDaoJpa.addNewVideo(
                     appUser,
                     title,
                     description,

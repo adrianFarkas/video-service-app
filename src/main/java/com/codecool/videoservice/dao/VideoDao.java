@@ -14,6 +14,6 @@ public interface VideoDao {
 
     Video updateById(Long id, Video video);
 
-    void addNewVideo(VideoAppUser user, String title, String description,
-                     String videoLink, String thumbnailLink);
+    Video addNewVideo(VideoAppUser user, String title, String description,
+                      String videoLink, String thumbnailLink);
 }
