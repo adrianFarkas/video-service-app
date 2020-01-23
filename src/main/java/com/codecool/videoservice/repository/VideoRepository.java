@@ -16,13 +16,11 @@ public interface VideoRepository extends JpaRepository<Video, Long> {
     @Query("UPDATE Video SET title = :#{#video.title}, description = :#{#video.description} WHERE id = :id")
     void updateById(Long id, Video video);
 
-    @Query("SELECT NEW com.codecool.videoservice.model.VideoDetails(" +
-            "v.id, v.title, v.description, v.videoLink, v.thumbNailLink, v.creationDate, v.videoAppUser.id)" +
+    @Query("SELECT NEW com.codecool.videoservice.model.VideoDetails(v)" +
             "FROM Video v")
     List<VideoDetails> getAllVideo();
 
-    @Query("SELECT NEW com.codecool.videoservice.model.VideoDetails(" +
-            "v.id, v.title, v.description, v.videoLink, v.thumbNailLink, v.creationDate, v.videoAppUser.id)" +
+    @Query("SELECT NEW com.codecool.videoservice.model.VideoDetails(v)" +
             "FROM Video v WHERE v.id = :id")
     VideoDetails getVideoById(Long id);
 
