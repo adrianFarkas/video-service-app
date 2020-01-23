@@ -1,6 +1,7 @@
 package com.codecool.videoservice.repository;
 
 import com.codecool.videoservice.model.Comment;
+import com.codecool.videoservice.model.CommentDetails;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -11,7 +12,10 @@ import java.util.List;
 @Transactional
 public interface CommentRepository extends JpaRepository<Comment, Long> {
 
-    List<Comment> findAllByVideoId(Long id);
+    @Query("SELECT NEW com.codecool.videoservice.model.CommentDetails(c)" +
+            "FROM Comment c " +
+            "WHERE c.video.id = :id")
+    List<CommentDetails> findAllByVideoId(Long id);
 
     @Modifying
     @Query("UPDATE Comment " +

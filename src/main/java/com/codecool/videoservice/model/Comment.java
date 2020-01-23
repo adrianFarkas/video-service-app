@@ -34,7 +34,4 @@ public class Comment {
     @JsonIgnore
     @ToString.Exclude
     private VideoAppUser videoAppUser;
-
-    @Column(name = "video_app_user_id", insertable = false, updatable = false)
-    private String userId;
 }

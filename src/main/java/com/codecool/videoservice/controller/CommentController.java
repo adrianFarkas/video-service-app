@@ -1,6 +1,7 @@
 package com.codecool.videoservice.controller;
 
 import com.codecool.videoservice.model.Comment;
+import com.codecool.videoservice.model.CommentDetails;
 import com.codecool.videoservice.model.user.VideoAppUser;
 import com.codecool.videoservice.repository.CommentRepository;
 import com.codecool.videoservice.repository.VideoRepository;
@@ -29,12 +30,12 @@ public class CommentController {
     private EntityManager entityManager;
 
     @GetMapping
-    public List<Comment> getCommentsByVideoId(@RequestParam("videoId") Long id) {
+    public List<CommentDetails> getCommentsByVideoId(@RequestParam("videoId") Long id) {
         return commentRepository.findAllByVideoId(id);
     }
 
     @PostMapping
-    public List<Comment> addNewComment(@RequestBody Comment comment, @RequestParam("videoId") Long id) {
+    public List<CommentDetails> addNewComment(@RequestBody Comment comment, @RequestParam("videoId") Long id) {
         VideoAppUser appUser = authService.getAuthenticatedUser();
         comment.setVideo(videoRepository.findById(id).orElse(null));
         comment.setVideoAppUser(appUser);

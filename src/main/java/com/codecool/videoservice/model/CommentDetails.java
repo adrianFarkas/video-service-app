@@ -2,7 +2,6 @@ package com.codecool.videoservice.model;
 
 import com.codecool.videoservice.model.user.BasicUserInformation;
 import com.codecool.videoservice.model.user.VideoAppUser;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
