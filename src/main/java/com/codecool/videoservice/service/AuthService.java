@@ -4,6 +4,7 @@ import com.codecool.videoservice.model.user.VideoAppUser;
 import com.codecool.videoservice.repository.UserRepository;
 import com.codecool.videoservice.security.JwtTokenServices;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -32,7 +33,8 @@ public class AuthService {
     @Autowired
     private UserRepository userRepository;
 
-    private int cookieMaxAge = 36000000;
+    @Value("${jwt.validity}")
+    private int validityInMs;
 
     public void saveUser(VideoAppUser user) {
         user.setRoles(Collections.singletonList("ROLE_USER"));
@@ -60,7 +62,7 @@ public class AuthService {
                 .collect(Collectors.toList());
 
         String token = jwtTokenServices.createToken(authentication.getName(), roles);
-        response.addCookie(getUserCookie(token, cookieMaxAge));
+        response.addCookie(getUserCookie(token, validityInMs / 1000));
     }
 
     public void logout(HttpServletResponse response) {
