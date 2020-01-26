@@ -2,8 +2,8 @@ package com.codecool.videoservice.dao;
 
 import com.codecool.videoservice.model.Video;
 import com.codecool.videoservice.model.VideoDetails;
-import com.codecool.videoservice.model.user.VideoAppUser;
 import com.codecool.videoservice.repository.VideoRepository;
+import com.codecool.videoservice.service.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,6 +11,9 @@ import java.util.List;
 
 @Service
 public class VideoDaoJpa implements VideoDao {
+
+    @Autowired
+    private AuthService authService;
 
     @Autowired
     private VideoRepository videoRepository;
@@ -28,11 +31,11 @@ public class VideoDaoJpa implements VideoDao {
         return videoRepository.findById(id).orElse(null);
     }
 
-    public Video addNewVideo(VideoAppUser user, String title, String description,
+    public Video saveVideo(String title, String description,
                              String videoLink, String thumbnailLink) {
 
         Video newVideo = Video.builder()
-                .videoAppUser(user)
+                .videoAppUser(authService.getAuthenticatedUser())
                 .title(title)
                 .description(description)
                 .videoLink(videoLink)
