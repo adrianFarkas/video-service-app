@@ -45,8 +45,8 @@ public class CommentController {
     }
 
     @PutMapping("/{id}")
-    public Comment updateComment(@RequestBody Comment comment, @PathVariable("id") Long id) {
+    public CommentDetails updateComment(@RequestBody Comment comment, @PathVariable("id") Long id) {
         commentRepository.updateById(comment, id);
-        return commentRepository.findById(id).orElse(null);
+        return commentRepository.getCommentById(id);
     }
 }

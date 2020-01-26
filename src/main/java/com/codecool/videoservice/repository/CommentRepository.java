@@ -14,8 +14,14 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
 
     @Query("SELECT NEW com.codecool.videoservice.model.CommentDetails(c)" +
             "FROM Comment c " +
-            "WHERE c.video.id = :id")
+            "WHERE c.video.id = :id " +
+            "ORDER BY c.creationDate DESC")
     List<CommentDetails> findAllByVideoId(Long id);
+
+    @Query("SELECT NEW com.codecool.videoservice.model.CommentDetails(c)" +
+            "FROM Comment c " +
+            "WHERE c.id = :id")
+    CommentDetails getCommentById(Long id);
 
     @Modifying
     @Query("UPDATE Comment " +
