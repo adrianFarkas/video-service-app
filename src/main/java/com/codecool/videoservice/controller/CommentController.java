@@ -7,6 +7,7 @@ import com.codecool.videoservice.repository.CommentRepository;
 import com.codecool.videoservice.repository.VideoRepository;
 import com.codecool.videoservice.service.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityManager;
@@ -48,5 +49,11 @@ public class CommentController {
     public CommentDetails updateComment(@RequestBody Comment comment, @PathVariable("id") Long id) {
         commentRepository.updateById(comment, id);
         return commentRepository.getCommentById(id);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteComment(@PathVariable("id") Long id) {
+        commentRepository.deleteById(id);
+        return ResponseEntity.ok("Deleted successfully");
     }
 }
