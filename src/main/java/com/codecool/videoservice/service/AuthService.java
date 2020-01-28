@@ -81,14 +81,19 @@ public class AuthService {
         response.addCookie(getUserCookie(null, 0));
     }
 
-    public void verifyAccount(String token) {
+    public Map<String, Boolean> verifyAccount(String token) {
         ConfirmationToken confirmationToken = confirmationTokenRepository
                 .findByConfirmationToken(token);
-        Optional<VideoAppUser> user = userRepository.findByEmail(confirmationToken.getVideoAppUser().getEmail());
-        user.ifPresent(videoAppUser -> {
-            videoAppUser.setEnabled(true);
-            userRepository.save(videoAppUser);
-        });
+        if (confirmationToken != null) {
+            Optional<VideoAppUser> user = userRepository.findByEmail(confirmationToken.getVideoAppUser().getEmail());
+            user.ifPresent(videoAppUser -> {
+                videoAppUser.setEnabled(true);
+                userRepository.save(videoAppUser);
+            });
+            confirmationTokenRepository.deleteByConfirmationToken(token);
+            return createResponse("success", true);
+        }
+        return createResponse("success", false);
     }
 
     private Cookie getUserCookie(String value, Integer age) {
@@ -111,8 +116,14 @@ public class AuthService {
         mailMessage.setSubject("Verify your email!");
         mailMessage.setText("Dear " + user.getFirstName() + " " + user.getLastName() + ",\n" +
                 "To confirm your account, please click here: \n" +
-                "http://localhost:8080/auth/verify?token=" + token.getConfirmationToken());
+                "http://localhost:3000/verify?token=" + token.getConfirmationToken());
 
         emailService.sendEmail(mailMessage);
+    }
+
+    private Map<String, Boolean> createResponse(String key, Boolean value) {
+        Map<String, Boolean> res = new HashMap<>();
+        res.put(key, value);
+        return res;
     }
 }

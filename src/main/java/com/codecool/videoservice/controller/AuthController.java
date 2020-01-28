@@ -9,6 +9,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/auth")
@@ -44,5 +45,11 @@ public class AuthController {
         if (authService.isEmailExists(email))
             return ResponseEntity.ok(true);
         return  ResponseEntity.ok(false);
+    }
+
+    @GetMapping("/verify")
+    public ResponseEntity verifyAccount(@RequestParam String token) {
+      Map<String, Boolean> verified = authService.verifyAccount(token);
+      return ResponseEntity.ok(verified);
     }
 }
