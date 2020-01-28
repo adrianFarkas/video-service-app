@@ -37,6 +37,10 @@ public class Video {
     @ToString.Exclude
     private List<Comment> comments;
 
+    @OneToMany(mappedBy = "video")
+    @ToString.Exclude
+    private List<VideoRate> rates;
+
     @ManyToOne
     @JsonIgnore
     @ToString.Exclude

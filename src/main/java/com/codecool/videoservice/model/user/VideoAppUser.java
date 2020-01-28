@@ -2,6 +2,7 @@ package com.codecool.videoservice.model.user;
 
 import com.codecool.videoservice.model.Comment;
 import com.codecool.videoservice.model.Video;
+import com.codecool.videoservice.model.VideoRate;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
@@ -42,6 +43,10 @@ public class VideoAppUser {
     @JsonIgnore
     @OneToMany(mappedBy = "videoAppUser", cascade = CascadeType.PERSIST)
     private Set<Video> videos;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "videoAppUser", cascade = CascadeType.PERSIST)
+    private Set<VideoRate> rates;
 
     @JsonIgnore
     @OneToMany(mappedBy = "videoAppUser", cascade = CascadeType.PERSIST)
