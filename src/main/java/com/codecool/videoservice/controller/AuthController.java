@@ -5,7 +5,6 @@ import com.codecool.videoservice.service.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
@@ -18,19 +17,15 @@ public class AuthController {
     private AuthService authService;
 
     @PostMapping("/sign-up")
-    public ResponseEntity signUp(@RequestBody VideoAppUser user) {
-        authService.saveUser(user);
-        return ResponseEntity.ok("User saved successfully!");
+    public ResponseEntity<String> signUp(@RequestBody VideoAppUser user) {
+        String result = authService.saveUser(user);
+        return ResponseEntity.ok(result);
     }
 
     @PostMapping("/sign-in")
-    public ResponseEntity signIn(@RequestBody VideoAppUser user, HttpServletResponse response) {
-        try {
-            authService.authenticate(user, response);
-        } catch (AuthenticationException e) {
-            return ResponseEntity.ok(false);
-        }
-        return ResponseEntity.ok(true);
+    public ResponseEntity<String> signIn(@RequestBody VideoAppUser user, HttpServletResponse response) {
+        String res = authService.authenticate(user, response);
+        return ResponseEntity.ok(res);
     }
 
     @PostMapping("/logout")
@@ -44,5 +39,11 @@ public class AuthController {
         if (authService.isEmailExists(email))
             return ResponseEntity.ok(true);
         return  ResponseEntity.ok(false);
+    }
+
+    @GetMapping("/verify")
+    public ResponseEntity<String> verifyAccount(@RequestParam String token) {
+      String verified = authService.verifyAccount(token);
+      return ResponseEntity.ok(verified);
     }
 }

@@ -1,6 +1,7 @@
 package com.codecool.videoservice.model.user;
 
 import com.codecool.videoservice.model.Comment;
+import com.codecool.videoservice.model.ConfirmationToken;
 import com.codecool.videoservice.model.Video;
 import com.codecool.videoservice.model.VideoRate;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -51,6 +52,11 @@ public class VideoAppUser {
     @JsonIgnore
     @OneToMany(mappedBy = "videoAppUser", cascade = CascadeType.PERSIST)
     private Set<Comment> comments;
+
+    private Boolean enabled;
+
+    @OneToOne(mappedBy = "videoAppUser")
+    private ConfirmationToken confirmationToken;
 
     @ElementCollection(fetch = FetchType.EAGER)
     @Builder.Default
