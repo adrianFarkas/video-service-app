@@ -17,15 +17,18 @@ public class CustomUserDetails implements UserDetails {
     private String email;
     private String password;
     private String profileImg;
+    private Boolean enabled;
     private Collection<? extends GrantedAuthority> authorities;
 
-    public CustomUserDetails(String id, String firstName, String lastName, String email, String password, String profileImg, Collection<? extends GrantedAuthority> authorities) {
+    public CustomUserDetails(String id, String firstName, String lastName, String email, String password,
+                             String profileImg, Boolean enabled, Collection<? extends GrantedAuthority> authorities) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.password = password;
         this.profileImg = profileImg;
+        this.enabled = enabled;
         this.authorities = authorities;
     }
 
@@ -44,6 +47,7 @@ public class CustomUserDetails implements UserDetails {
                 user.getEmail(),
                 user.getPassword(),
                 user.getProfileImg(),
+                user.getEnabled(),
                 authorities
         );
     }
@@ -75,6 +79,6 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return enabled;
     }
 }

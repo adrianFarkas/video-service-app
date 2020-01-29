@@ -53,8 +53,7 @@ public class VideoAppUser {
     @OneToMany(mappedBy = "videoAppUser", cascade = CascadeType.PERSIST)
     private Set<Comment> comments;
 
-    @Column(columnDefinition = "boolean default false")
-    private boolean enabled;
+    private Boolean enabled;
 
     @OneToOne(mappedBy = "videoAppUser")
     private ConfirmationToken confirmationToken;

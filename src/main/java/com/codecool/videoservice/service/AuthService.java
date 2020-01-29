@@ -9,8 +9,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -20,6 +22,8 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import java.util.*;
 import java.util.stream.Collectors;
+
+import static com.codecool.videoservice.util.ResponseMsg.*;
 
 @Service
 public class AuthService {
@@ -45,13 +49,16 @@ public class AuthService {
     @Value("${jwt.validity}")
     private int validityInMs;
 
-    public void saveUser(VideoAppUser user) {
+    public String saveUser(VideoAppUser user) {
         if (userRepository.findByEmail(user.getEmail()).isEmpty()) {
             user.setRoles(Collections.singletonList("ROLE_USER"));
             user.setPassword(passwordEncoder.encode(user.getPassword()));
+            user.setEnabled(false);
             userRepository.save(user);
             sendConfirmationEmail(user, createConfirmationToken(user));
+            return SUCCESS.getMsg();
         }
+        return UNSUCCESSFUL.getMsg();
     }
 
     public VideoAppUser getAuthenticatedUser() {
@@ -63,25 +70,31 @@ public class AuthService {
         return userRepository.findByEmail(email).isPresent();
     }
 
-    public void authenticate(VideoAppUser user, HttpServletResponse response) {
+    public String authenticate(VideoAppUser user, HttpServletResponse response) {
+        try {
+            String username = user.getEmail();
 
-        String username = user.getEmail();
+            Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, user.getPassword()));
+            List<String> roles = authentication.getAuthorities()
+                    .stream()
+                    .map(GrantedAuthority::getAuthority)
+                    .collect(Collectors.toList());
 
-        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, user.getPassword()));
-        List<String> roles = authentication.getAuthorities()
-                .stream()
-                .map(GrantedAuthority::getAuthority)
-                .collect(Collectors.toList());
-
-        String token = jwtTokenServices.createToken(authentication.getName(), roles);
-        response.addCookie(getUserCookie(token, validityInMs / 1000));
+            String token = jwtTokenServices.createToken(authentication.getName(), roles);
+            response.addCookie(getUserCookie(token, validityInMs / 1000));
+        } catch (DisabledException e) {
+            return DISABLED.getMsg();
+        } catch (AuthenticationException e) {
+            return INCORRECT.getMsg();
+        }
+        return SUCCESS.getMsg();
     }
 
     public void logout(HttpServletResponse response) {
         response.addCookie(getUserCookie(null, 0));
     }
 
-    public Map<String, Boolean> verifyAccount(String token) {
+    public String verifyAccount(String token) {
         ConfirmationToken confirmationToken = confirmationTokenRepository
                 .findByConfirmationToken(token);
         if (confirmationToken != null) {
@@ -91,9 +104,9 @@ public class AuthService {
                 userRepository.save(videoAppUser);
             });
             confirmationTokenRepository.deleteByConfirmationToken(token);
-            return createResponse("success", true);
+            return SUCCESS.getMsg();
         }
-        return createResponse("success", false);
+        return UNSUCCESSFUL.getMsg();
     }
 
     private Cookie getUserCookie(String value, Integer age) {
@@ -119,11 +132,5 @@ public class AuthService {
                 "http://localhost:3000/verify?token=" + token.getConfirmationToken());
 
         emailService.sendEmail(mailMessage);
-    }
-
-    private Map<String, Boolean> createResponse(String key, Boolean value) {
-        Map<String, Boolean> res = new HashMap<>();
-        res.put(key, value);
-        return res;
     }
 }
