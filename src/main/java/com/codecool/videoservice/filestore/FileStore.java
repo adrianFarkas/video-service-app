@@ -9,7 +9,9 @@ import static com.codecool.videoservice.util.FileType.MP4;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.net.URL;
 import java.text.Normalizer;
 import java.text.SimpleDateFormat;
@@ -38,6 +40,24 @@ public class FileStore {
         return res;
     }
 
+    public String saveProfilePicture(MultipartFile file, VideoAppUser user) {
+        String fileName = generateFileName("profile_picture", JPG.getFormat());
+        String actPicturePath = user.getProfileImg().replace(cloudFront, "");
+        try {
+            s3.deleteObject(s3bucket, actPicturePath);
+            s3.putObject(
+                    s3bucket,
+                    createS3FilePath(user, fileName),
+                    file.getInputStream(),
+                    null
+            );
+            return createUserFilePath(user, fileName);
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+            return null;
+        }
+    }
+
     private String createS3FilePath(VideoAppUser user, String filename) {
         return String.format("%s/%s", user.getId(), filename);
     }
@@ -47,7 +67,7 @@ public class FileStore {
     }
 
     private String generateFileName(String fromString, String type) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy_MM_dd_HH_mm");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss");
 
         fromString = Normalizer.normalize(fromString, Normalizer.Form.NFD);
         fromString = fromString.replaceAll("[^\\p{ASCII}]", "");
