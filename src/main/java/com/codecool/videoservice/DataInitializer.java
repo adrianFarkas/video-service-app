@@ -2,12 +2,13 @@ package com.codecool.videoservice;
 
 import com.codecool.videoservice.model.Video;
 import com.codecool.videoservice.model.user.VideoAppUser;
+import com.codecool.videoservice.repository.UserRepository;
 import com.codecool.videoservice.repository.VideoRepository;
-import com.codecool.videoservice.service.AuthService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
@@ -20,7 +21,10 @@ public class DataInitializer implements CommandLineRunner {
     private VideoRepository videoRepository;
 
     @Autowired
-    private AuthService authService;
+    private UserRepository userRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Value("${cloudfront.link}")
     private String cloudFront;
@@ -36,8 +40,9 @@ public class DataInitializer implements CommandLineRunner {
                 .email("adrian@example.com")
                 .firstName("Farkas")
                 .lastName("Adrián")
-                .password("Qwerty1")
-                .profileImg(String.format("%s/%s", basicLink, "my-img.jpg"))
+                .password(passwordEncoder.encode("Qwerty1"))
+                .roles(Collections.singletonList("ROLE_USER"))
+                .enabled(true)
                 .build();
 
         Video video1 = Video.builder()
@@ -75,7 +80,7 @@ public class DataInitializer implements CommandLineRunner {
                 .videoAppUser(appUser)
                 .build();
 
-        authService.saveUser(appUser);
+        userRepository.save(appUser);
         videoRepository.saveAll(Arrays.asList(video1, video2, video3, video4));
 
         log.debug("printing all videos...");
