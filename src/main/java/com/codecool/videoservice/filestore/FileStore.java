@@ -43,7 +43,7 @@ public class FileStore {
     }
 
     public String createUserFilePath(VideoAppUser appUser, String filename) {
-        return String.format("%s/%s/%s", cloudFront, appUser.getId(), filename);
+        return String.format("%s%s/%s", cloudFront, appUser.getId(), filename);
     }
 
     private String generateFileName(String fromString, String type) {

@@ -29,7 +29,7 @@ public class DataInitializer implements CommandLineRunner {
     public void run(String... args) {
 
         String customId = "feda081c-9cd2-44ea-90eb-1a0c8131b34d";
-        String basicLink = String.format("%s/%s", cloudFront, customId);
+        String basicLink = String.format("%s%s", cloudFront, customId);
 
         VideoAppUser appUser = VideoAppUser.builder()
                 .id(customId)
