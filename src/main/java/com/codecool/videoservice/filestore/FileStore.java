@@ -42,9 +42,12 @@ public class FileStore {
 
     public String saveProfilePicture(MultipartFile file, VideoAppUser user) {
         String fileName = generateFileName("profile_picture", JPG.getFormat());
-        String actPicturePath = user.getProfileImg().replace(cloudFront, "");
+        String actPicturePath = user.getProfileImg() != null ?
+                user.getProfileImg().replace(cloudFront, "") : null;
         try {
-            s3.deleteObject(s3bucket, actPicturePath);
+            if (actPicturePath != null)
+                s3.deleteObject(s3bucket, actPicturePath);
+
             s3.putObject(
                     s3bucket,
                     createS3FilePath(user, fileName),
