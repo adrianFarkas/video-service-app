@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletResponse;
 
 @RestController
+@CrossOrigin(allowCredentials = "true")
 @RequestMapping("/auth")
 public class AuthController {
 

@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Map;
 
-@CrossOrigin
 @RestController
+@CrossOrigin(allowCredentials = "true")
 @RequestMapping("/rates")
 public class RateController {
 

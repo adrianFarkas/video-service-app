@@ -13,7 +13,7 @@ import java.io.*;
 import java.util.*;
 
 @RestController
-@CrossOrigin
+@CrossOrigin(allowCredentials = "true")
 @RequestMapping
 public class FileUploadController {
 

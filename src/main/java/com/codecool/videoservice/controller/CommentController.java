@@ -14,7 +14,7 @@ import javax.persistence.EntityManager;
 import java.util.List;
 
 @RestController
-@CrossOrigin
+@CrossOrigin(allowCredentials = "true")
 @RequestMapping("/comments")
 public class CommentController {
 

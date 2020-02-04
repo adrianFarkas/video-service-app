@@ -13,7 +13,7 @@ import java.util.HashMap;
 import java.util.List;
 
 @RestController
-@CrossOrigin
+@CrossOrigin(allowCredentials = "true")
 @RequestMapping("/videos")
 public class VideoController {
 
