@@ -19,3 +19,11 @@ The app is not finished yet. I keep improving it.
 This repository contains the backend.
 
 You can check the [Frontend repository](https://github.com/adrianFarkas/video-service-app-frontend) on this link.
+
+It's also deployed on Heroku: [Cool Video](https://cool-video.herokuapp.com/)
+
+If you want to try it without signing up, feel free to use this account:
+
+Email: user@user.com
+
+Password: Qwerty01
